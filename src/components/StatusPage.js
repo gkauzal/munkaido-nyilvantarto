@@ -1,13 +1,20 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Switch } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Switch, Image } from 'react-native';
 
 import { signOutUser } from '../auth';
 import { addHistory, updateUserState } from '../database';
 
 const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
+  const [link, setLink] = useState('');
+
   const handleLogout = async () => {
     await signOutUser();
     setUserData(null);
+  };
+
+  const generateImage = async () => {
+    const link = fetch('https://inspirobot.me/api?generate=true').then(response => response.text());
+    setLink(link);
   };
 
   const toggleSwitch = () => {
@@ -25,8 +32,8 @@ const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
   return (
     <View style={styles.container}>
       <View style={styles.logoutSection}>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Kijelentkezés</Text>
+        <TouchableOpacity style={styles.logoutButton} onPress={() => navigate('Beállítások')}>
+          <Text style={styles.logoutButtonText}>Beállítások</Text>
         </TouchableOpacity>
       </View>
       <Text style={styles.appTitle}>Szia {userData.name}!</Text>
@@ -43,6 +50,9 @@ const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
       <TouchableOpacity onPress={() => navigate('Napló')} style={[styles.button, styles.shadow]}>
         <Text style={styles.buttonText}>Napló megtekintése</Text>
       </TouchableOpacity>
+      <View>
+        <Image style={styles.image} source={{ uri: link }} />
+      </View>
     </View>
   );
 };
@@ -97,6 +107,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
+  image: { width: 400, height: 400, resizeMode: 'contain' },
 });
 
 export default StatusPage;

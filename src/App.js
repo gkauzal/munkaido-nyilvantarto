@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { loginStatus } from './auth';
 import InnerPage from './components/InnerPage';
 import LoginPage from './components/LoginPage';
+import { generateImage } from './components/StatusPage';
 import { getUserDataByEmail } from './database';
 
 const App = () => {

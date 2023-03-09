@@ -1,4 +1,5 @@
 import { async } from '@firebase/util';
+import * as EmailValidator from 'email-validator';
 import { useState } from 'react';
 import {
   View,
@@ -10,7 +11,6 @@ import {
   Button,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import * as EmailValidator from 'email-validator';
 
 import { signIn, signUp, resetPassword } from '../auth';
 import { getUserDataByEmail, createUserData } from '../database';
