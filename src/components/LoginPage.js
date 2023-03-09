@@ -1,3 +1,4 @@
+import { async } from '@firebase/util';
 import { useState } from 'react';
 import {
   View,
@@ -9,8 +10,9 @@ import {
   Button,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import * as EmailValidator from 'email-validator';
 
-import { signIn, signUp } from '../auth';
+import { signIn, signUp, resetPassword } from '../auth';
 import { getUserDataByEmail, createUserData } from '../database';
 
 const LoginPage = ({ setUserData }) => {
@@ -42,6 +44,16 @@ const LoginPage = ({ setUserData }) => {
       setUserData(initialUserData);
     } else {
       window.alert('A jelszavak nem egyeznek!');
+    }
+  };
+
+  const checkEmail = async () => {
+    if (email === '') {
+      window.alert('Töltsd ki az e-amil címed, majd nyomd meg újra ezt a gombot!');
+    } else if (!EmailValidator.validate(email)) {
+      window.alert('Az e-mail cím nem megfelelő formátumú');
+    } else {
+      resetPassword(email);
     }
   };
 
@@ -97,6 +109,9 @@ const LoginPage = ({ setUserData }) => {
             onChangeText={setPassword}
             secureTextEntry={true}
           />
+          <TouchableOpacity style={styles.forgetPswContainer} onPress={checkEmail}>
+            <Text style={styles.forgetPswText}>Elfelejtett jelszó</Text>
+          </TouchableOpacity>
           {isSignUpActive && (
             <TextInput
               style={styles.input}
@@ -176,6 +191,13 @@ const styles = StyleSheet.create({
   },
   activeText: {
     color: '#ffffff',
+  },
+  forgetPswText: {
+    fontSize: 12,
+    fontStyle: 'italic',
+  },
+  forgetPswContainer: {
+    alignItems: 'flex-end',
   },
 });
 
