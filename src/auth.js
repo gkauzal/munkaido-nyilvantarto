@@ -21,7 +21,7 @@ export async function signUp(email, password) {
     return userCredential.user;
   } catch (error) {
     // az error változó a catch blokk-ban létezik, a try-ban létrejött hibát tárolja
-    console.log(error.message);
+    console.log('error during sign in', error.message);
     window.alert('error during sign up: ', error.message);
   }
 }
