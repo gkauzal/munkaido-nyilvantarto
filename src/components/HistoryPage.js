@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { SvgXml } from 'react-native-svg';
 
+import trashIcon from '../components/Trash_font_awesome';
 import { getHistory } from '../database';
 
 export default function HistoryPage(props) {
@@ -22,6 +24,9 @@ export default function HistoryPage(props) {
           ]}>
           {item.state === 'in' ? 'bejött' : 'távozott'}
         </Text>
+        <TouchableOpacity>
+          <SvgXml xml={trashIcon} />
+        </TouchableOpacity>
       </View>
     </View>
   );
