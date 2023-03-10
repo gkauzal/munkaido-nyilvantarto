@@ -1,12 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
-import { SvgXml } from 'react-native-svg';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
 
-import trashIcon from '../components/Trash_font_awesome';
-import { getHistory } from '../database';
+import { getHistory, deleteHistoryById } from '../database';
 
 export default function HistoryPage(props) {
   const [history, setHistory] = useState([]);
+
+  const TwoButtonAlert = () =>
+    Alert.alert('Törlés megerősítése', 'Biztos törlöd a bejegyzést?', [
+      {
+        text: 'Mégse',
+        onPress: () => console.log('Törlés visszavonva'),
+        style: 'cancel',
+      },
+      {
+        text: 'Törlés',
+        onPress: () => {
+          deleteHistoryById(props.userData.email, props.userData.id);
+        },
+      },
+    ]);
 
   const renderItem = ({ item, index }) => (
     <View
@@ -24,10 +37,18 @@ export default function HistoryPage(props) {
           ]}>
           {item.state === 'in' ? 'bejött' : 'távozott'}
         </Text>
-        <TouchableOpacity>
-          <SvgXml xml={trashIcon} />
-        </TouchableOpacity>
       </View>
+      {index === 0 ? (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity>
+            <Text style={styles.deleteButton} onPress={TwoButtonAlert}>
+              Törlés
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        ''
+      )}
     </View>
   );
 
@@ -77,5 +98,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
+  },
+  deleteButton: {
+    color: 'red',
+    fontSize: 17,
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    paddingLeft: 40,
   },
 });

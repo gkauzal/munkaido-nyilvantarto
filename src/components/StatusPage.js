@@ -1,24 +1,39 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Switch, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Switch, Dimensions, Image } from 'react-native';
 
 import { signOutUser } from '../auth';
 import { addHistory, updateUserState } from '../database';
 
+const heightY = Dimensions.get('window').height;
+
 const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
-  const [link, setLink] = useState('');
+  const [link, setLink] = useState('init');
+
+  if (link === 'init') {
+    generateImage();
+  } else {
+    null;
+  }
 
   const handleLogout = async () => {
     await signOutUser();
     setUserData(null);
   };
 
-  const generateImage = async () => {
-    const link = fetch('https://inspirobot.me/api?generate=true').then(response => response.text());
-    setLink(link);
-  };
+  async function generateImage() {
+    try {
+      const response = await fetch('https://inspirobot.me/api?generate=true');
+      const link = await response.text();
+      setLink(link);
+      console.log('image is loaded');
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const toggleSwitch = () => {
     let newState = '';
+    generateImage();
     if (userData.currentState === 'in') {
       newState = 'out';
     } else {
